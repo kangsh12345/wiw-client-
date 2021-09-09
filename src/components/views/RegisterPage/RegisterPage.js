@@ -54,7 +54,7 @@ const BootstrapInput = withStyles((theme) => ({
     },
   }));
 
-function Register() {
+function Register(props) {
     const classes = useStyles();
     const [who, setwho] = useState('')
     const whohandleChange = (e)=>{
@@ -63,6 +63,7 @@ function Register() {
 
     const IDInput = useRef();
     const NameInput = useRef();
+    const MajorInput = useRef();
     const NumberInput = useRef();
     const PasswordInput = useRef();
     const Password2Input = useRef();
@@ -74,12 +75,14 @@ function Register() {
         if (
           IDInput.current.value &&
           NameInput.current.value &&
+          MajorInput.current.value &&
           NumberInput.current.value &&
           PasswordInput.current.value &&
           Password2Input.current.value &&
           (ChkPassword===false) &&
           (ChkID===false) &&
           (ChkName===false) &&
+          (ChkMajor===false) &&
           (ChkNumber===false) &&
           (ChkPassword===false) &&
           (who !== '')
@@ -87,6 +90,7 @@ function Register() {
           const dataall = {
             user_id: IDInput.current.value,
             name: NameInput.current.value,
+            major: MajorInput.current.value,
             student_id: NumberInput.current.value,
             password: PasswordInput.current.value,
             belong: who
@@ -104,7 +108,7 @@ function Register() {
               }
             }
           )
-          .then(document.location.href='/login')
+          .then(props.history.push('/login'))
 
           // console.log(AllPost)
         }
@@ -112,6 +116,7 @@ function Register() {
 
     const [ChkID, setChkID] = useState(false)
     const [ChkName, setChkName] = useState(false)
+    const [ChkMajor, setChkMajor] = useState(false)
     const [ChkNumber, setChkNumber] = useState(false)
     const [ChkPassword, setChkPassword] = useState(false)
     const [ChkPassword2, setChkPassword2] = useState(false)
@@ -160,6 +165,13 @@ function Register() {
         setChkName(false)
       }
     }
+    const changMajor = async () => {
+      if(MajorInput.current.value===""){
+        setChkMajor("학과를 입력해주세요")
+      } else{
+        setChkMajor(false)
+      }
+    }
     const changNumber = async () => {
       if(NumberInput.current.value===""){
         setChkNumber("학번을 입력해주세요")
@@ -202,6 +214,8 @@ function Register() {
                       {ChkID && <span className="errmsg">{ChkID}</span>}
                       <TextField inputRef={NameInput} onBlur={changName} label="실명" variant="outlined" style={{width: '400px',marginBottom: '20px'}}/>
                       {ChkName && <span className="errmsg">{ChkName}</span>}
+                      <TextField inputRef={MajorInput} onBlur={changMajor} label="학과 ex)정보보호학과" variant="outlined" style={{width: '400px',marginBottom: '20px'}}/>
+                      {ChkMajor && <span className="errmsg">{ChkMajor}</span>}
                       <TextField inputRef={NumberInput} onBlur={changNumber} label="학번 8자리 ex)20191234" variant="outlined" style={{width: '400px',marginBottom: '20px'}}/>
                       {ChkNumber && <span className="errmsg">{ChkNumber}</span>}
                       <TextField inputRef={PasswordInput} onBlur={changPassword} type='password' label="비밀번호" variant="outlined" style={{width: '400px',marginBottom: '20px'}}/>

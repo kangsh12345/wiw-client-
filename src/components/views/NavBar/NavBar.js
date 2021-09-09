@@ -5,6 +5,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Link from "@material-ui/core/Link";
 import { fade, makeStyles } from "@material-ui/core/styles";
 
+
+//redux
+import {useDispatch} from 'react-redux';
+import {logoutUser} from "../../../_actions/user_action";
+import { useSelector } from "react-redux";
+
+
 const useStyles = makeStyles((theme) => ({
     "@global": {
       ul: {
@@ -25,10 +32,36 @@ const useStyles = makeStyles((theme) => ({
     link: {
       margin: "auto 10px auto auto",
     },
-
+    mypage: {
+      margin: "auto 10px auto auto",
+    }
   }));
 
-function NavBar() {
+function NavBar(props) {
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+
+    const logoutHandler = async (e) => {
+        e.preventDefault();
+
+        const dataAll = {
+          user_id: user.loginSuccess.UserInfo.user_id,
+          classroom: 0,
+        }
+        const jsonAll = JSON.stringify(dataAll) 
+
+        dispatch(logoutUser(jsonAll))
+        .then((res)=>{
+          // console.log(res)
+          if(res.payload.result=="NO"){
+            document.location.href='/';
+          } else{
+            alert('로그인 필요');
+            document.location.href='/login';
+          }
+        })
+    }
+
     const classes = useStyles();
 
     return (
@@ -50,15 +83,48 @@ function NavBar() {
                 홈{/* Home(이미지로 추후 대체) */}
                 </Link>
                 <nav></nav>
-
-                <Button
-                href="/login"
-                color="black"
-                variant="outlined"
-                className={classes.link}
-                >
-                로그인
-                </Button>
+                {(
+                  user.loginSuccess.result!=="OK" &&
+                  user.loginSuccess.result!=="공개 비공개 변경완료" &&
+                  user.loginSuccess.result!=="in" &&
+                  user.loginSuccess.result!=="out"
+                ) &&
+                  <Button
+                  href="/login"
+                  color="black"
+                  variant="outlined"
+                  className={classes.link}
+                  >
+                  로그인
+                  </Button>
+                }
+                {(
+                  user.loginSuccess.result==="OK" || 
+                  user.loginSuccess.result==="공개 비공개 변경완료" ||
+                  user.loginSuccess.result==="in" ||
+                  user.loginSuccess.result==="out"
+                ) &&
+                  <div className={classes.link}>
+                    <Button
+                    href="/mypage"
+                    color="black"
+                    variant="outlined"
+                    style={{margin: 'auto 20px auto auto'}}
+                    >
+                    마이페이지
+                    </Button>
+                    <Button
+                    color="black"
+                    variant="outlined"
+                    
+                    onClick={logoutHandler}
+                    >
+                    로그아웃
+                    </Button>
+                  </div>
+                }
+                
+                
             </Toolbar>
         </AppBar>
     )

@@ -3,10 +3,33 @@ import ReactDOM from 'react-dom';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 
+import { Provider } from 'react-redux';
+import {applyMiddleware, createStore, compose } from 'redux';
+import promiseMiddleware from 'redux-promise';
+import ReduxThunk from 'redux-thunk';
+import Reducer from './_reducers';
+
+import {persistStore} from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+
+const store = createStore(Reducer, compose(
+  applyMiddleware(promiseMiddleware, ReduxThunk),
+  window.__REDUX_DEVTOOLS_EXTENSION__ &&
+  window.__REDUX_DEVTOOLS_EXTENSION__(),
+))
+
+const persistor = persistStore(store)
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Provider
+    store={store}
+  >
+    <React.StrictMode>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>  
+    </React.StrictMode>
+  </Provider>,
   document.getElementById('root')
 );
 

@@ -11,6 +11,10 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
+//redux
+import {useDispatch} from 'react-redux';
+import {loginUser} from "../../../_actions/user_action";
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -31,7 +35,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LoginPage() {
+
+export default function LoginPage(props) {
+
+  const dispatch = useDispatch();
+
   const classes = useStyles();
 
   const IDInput = useRef();
@@ -47,23 +55,15 @@ export default function LoginPage() {
     }
     const jsonAll = JSON.stringify(dataAll) 
 
-    const LoginPost = await axios.post(
-      "/api/auth/login",
-      jsonAll,
-      {
-        headers:{
-          'Content-type': 'application/json',
-          'Accept': 'application/json'
-        }
-      }
-    )
+    dispatch(loginUser(jsonAll))
     .then((res)=>{
-      if(res.data.result=="OK"){
-        document.location.href='/';
+      if(res.payload.result=="OK"){
+        props.history.push('/');
       } else{
-        alert(res.data.result);
+        alert(res.payload.result);
       }
     })
+    
   }
 
   return (

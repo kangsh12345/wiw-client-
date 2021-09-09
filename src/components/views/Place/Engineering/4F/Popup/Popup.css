@@ -1,0 +1,26 @@
+.MuiDialog-paperWidthSm{
+    margin: auto auto auto auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    max-width: 100%;
+    min-width: 90%;
+    min-height: 70%;
+}
+
+.MuiDialogActions-root {
+    margin: auto auto auto auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.MuiDialogContent-root {
+    position: relative;
+    margin-top: -7px;
+    padding: 0 0;
+}

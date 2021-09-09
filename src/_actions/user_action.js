@@ -1,48 +1,109 @@
 import axios from 'axios';
 import {
     LOGIN_USER,
-    REGISTER_USER,
-    AUTH_USER,
     LOGOUT_USER,
+    SHOWCHANGE,
+    POPUPIN,
+    POPUPOUT,
 } from './types';
-import { USER_SERVER } from "../Config";
 
-export function registerUser(dataToSubmit){
-    const request = axios.post(`${USER_SERVER}/register`,dataToSubmit)
-        .then(response => response.data);
-    
-    return {
-        type: REGISTER_USER,
-        payload: request
-    }
-}
+export async function loginUser(dataToSubmit){
 
-export function loginUser(dataToSubmit){
-    const request = axios.post(`${USER_SERVER}/login`,dataToSubmit)
-                .then(response => response.data);
+    const request = await axios.post(
+      "/api/auth/login",
+      dataToSubmit,
+      {
+        headers:{
+          'Content-type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }
+    )
 
+    // console.log(request);
     return {
         type: LOGIN_USER,
-        payload: request
+        payload: request.data
     }
+    
 }
 
-export function auth(){
-    const request = axios.get(`${USER_SERVER}/auth`)
-    .then(response => response.data);
-
-    return {
-        type: AUTH_USER,
-        payload: request
+export async function logoutUser(dataToSubmit){
+  const request = await axios.post(
+    "/api/auth/logout",
+    dataToSubmit,
+    {
+      headers:{
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      }
     }
+  )
+
+  return {
+      type: LOGOUT_USER,
+      payload: request.data
+  }
 }
 
-export function logoutUser(){
-    const request = axios.get(`${USER_SERVER}/logout`)
-    .then(response => response.data);
 
-    return {
-        type: LOGOUT_USER,
-        payload: request
+export async function showChange(dataToSubmit, Show){
+  const request = await axios.post(
+    "/api/show",
+    dataToSubmit,
+    {
+      headers:{
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      }
     }
+  )
+  console.log(Show);
+
+  return {
+      type: SHOWCHANGE,
+      payload: request.data,
+      show: Show
+  }
+  
+}
+
+export async function popupIn(dataToSubmit, classroom, active){
+  const request = await axios.post(
+    "/api/popup/in",
+    dataToSubmit,
+    {
+      headers:{
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }
+  )
+
+  return {
+      type: POPUPIN,
+      payload: request.data,
+      active: true,
+      classroom: classroom
+  }
+}
+
+export async function popupOut(dataToSubmit){
+  const request = await axios.post(
+    "/api/popup/out",
+    dataToSubmit,
+    {
+      headers:{
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }
+  )
+
+  return {
+      type: POPUPOUT,
+      payload: request.data,
+      active: false,
+      classroom: 0
+  }
 }
